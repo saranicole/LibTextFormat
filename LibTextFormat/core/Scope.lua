@@ -1,21 +1,25 @@
 LibTextFormat = LibTextFormat or {}
 local LTF = LibTextFormat
 
-local Scope = {}
-Scope.__index = Scope
+LibTextFormatScope = LibTextFormatScope or ZO_Object:Subclass()
 
-local SAFE_GLOBALS = {
-    math = math,
-    string = string,
-    zo_strformat = zo_strformat,
-}
+local Scope = LibTextFormatScope
+LibTextFormatScope.__index = LibTextFormatScope
 
-function Scope:New(initial)
-    local vars = initial or {}
+function Scope:New(...)
+    local object = ZO_Object.New(self)
+    object:Initialize(...)
+    return object
+end
 
-    return setmetatable({
-        _vars = vars
-    }, self)
+function Scope:Initialize(initial)
+    local vars = {}
+    if initial then
+        for k, v in pairs(initial) do
+            vars[k] = v
+        end
+    end
+    self._vars = vars
 end
 
 function Scope:Add(key, value)
@@ -34,12 +38,10 @@ function Scope:Delete(key)
     self._vars[key] = nil
 end
 
-function Scope:Env()
-    return setmetatable({}, {
-        __index = function(_, k)
-            return self._vars[k] or SAFE_GLOBALS[k]
-        end
-    })
+function Scope:Clone()
+    local copy = {}
+    for k, v in pairs(self._vars) do
+        copy[k] = v
+    end
+    return Scope:New(copy)
 end
-
-LTF.Scope = Scope

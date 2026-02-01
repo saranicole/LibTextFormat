@@ -8,6 +8,10 @@ LTF.RegisterFilter("plural", function(count, singular, plural)
     return plural or (singular .. "s")
 end)
 
-LTF.RegisterFilter("upper", function(v)
-    return tostring(v):upper()
+LTF.RegisterFilter("number", function(value)
+    return tonumber(value) or 0
+end)
+
+LTF.RegisterFilter("string", function(value)
+    return tostring(value or "")
 end)

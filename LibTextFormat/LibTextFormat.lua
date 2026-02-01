@@ -11,7 +11,7 @@
 --
 -----------------------------------------------------------------------------------
 
-LibTextFormat or {}
+LibTextFormat = LibTextFormat or {}
 
 local LTF = LibTextFormat
 
@@ -28,26 +28,32 @@ local function splitPipeline(block)
     return parts
 end
 
-function LTF.format(template, scope)
+function LTF.Scope(initial)
+  return LibTextFormatScope:New(initial)
+end
+
+local function evalArgs(argStr, scope)
+    local args = {}
+    for var in argStr:gmatch("[^,]+") do
+        var = zo_strtrim(var)          -- remove whitespace
+        local value = scope:Get(var)
+        table.insert(args, value)
+    end
+    return args
+end
+
+function LTF:format(template, scope)
     return (template:gsub("{(.-)}", function(block)
         local parts = splitPipeline(block)
-        local env = scope:Env()
+        local args = evalArgs(parts[1], scope)  -- fetch multiple arguments
 
-        -- 1️⃣ evaluate argument list
-        local args = evalArgs(parts[1], scope)
-
-        -- 2️⃣ apply filters
-        local value
+        -- Apply filters, left-to-right
         for i = 2, #parts do
-            local filter = Text.Filters[parts[i]]
+            local filter = LTF.Filters[parts[i]]
             if not filter then
                 return "{UNKNOWN FILTER}"
             end
-
-            value = filter(unpack(args))
-
-            -- after first filter, collapse to single value
-            args = { value }
+            args = { filter(unpack(args)) }  -- collapse to single value for next filter
         end
 
         return tostring(args[1])
