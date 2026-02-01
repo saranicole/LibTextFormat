@@ -1,0 +1,17 @@
+## Title: LibTextFormat
+## Author: Saranicole1980
+## Version: ${ADDON_VERSION}
+## APIVersion: 101048 101049
+## AddOnVersion: 1
+## Description: Advanced Text Formatting and Parsing
+## IsLibrary: true
+
+# core
+core/Helpers.lua
+core/Scope.lua
+
+# filters
+filters/Collections.lua
+filters/Items.lua
+
+LibTextFormat.lua
