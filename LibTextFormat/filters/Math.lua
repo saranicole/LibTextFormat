@@ -11,37 +11,37 @@ local function toNumberSafe(value, default)
 end
 
 -- Variadic addition
-LTF.registerCoreFilter("add", function(...)
+LTF.Core["add"] = function(...)
     local args = {...}
     local sum = 0
     for _, v in ipairs(args) do
         sum = sum + (toNumberSafe(v) or 0)
     end
     return sum
-end)
+end
 
 -- Variadic subtraction (left-to-right)
-LTF.registerCoreFilter("sub", function(...)
+LTF.Core["sub"] = function(...)
     local args = {...}
     local result = toNumberSafe(args[1]) or 0
     for i = 2, #args do
         result = result - (toNumberSafe(args[i]) or 0)
     end
     return result
-end)
+end
 
 -- Variadic multiplication
-LTF.registerCoreFilter("mul", function(...)
+LTF.Core["mul"] = function(...)
     local args = {...}
     local product = 1
     for _, v in ipairs(args) do
         product = product * (toNumberSafe(v) or 1)
     end
     return product
-end)
+end
 
 -- Variadic division (left-to-right, protect divide by zero)
-LTF.registerCoreFilter("div", function(...)
+LTF.Core["div"] = function(...)
     local args = {...}
     local result = toNumberSafe(args[1]) or 0
     for i = 2, #args do
@@ -50,10 +50,10 @@ LTF.registerCoreFilter("div", function(...)
         result = result / v
     end
     return result
-end)
+end
 
 -- Variadic modulus (left-to-right)
-LTF.registerCoreFilter("mod", function(...)
+LTF.Core["mod"] = function(...)
     local args = {...}
     local result = toNumberSafe(args[1]) or 0
     for i = 2, #args do
@@ -62,20 +62,20 @@ LTF.registerCoreFilter("mod", function(...)
         result = result % v
     end
     return result
-end)
+end
 
 -- Variadic exponentiation (left-to-right)
-LTF.registerCoreFilter("pow", function(...)
+LTF.Core["pow"] = function(...)
     local args = {...}
     local result = toNumberSafe(args[1]) or 0
     for i = 2, #args do
         result = result ^ (toNumberSafe(args[i]) or 1)
     end
     return result
-end)
+end
 
 -- Min of all arguments
-LTF.registerCoreFilter("min", function(...)
+LTF.Core["min"] = function(...)
     local args = {...}
     local result = toNumberSafe(args[1]) or 0
     for i = 2, #args do
@@ -85,10 +85,10 @@ LTF.registerCoreFilter("min", function(...)
         end
     end
     return result
-end)
+end
 
 -- Max of all arguments
-LTF.registerCoreFilter("max", function(...)
+LTF.Core["max"] = function(...)
     local args = {...}
     local result = toNumberSafe(args[1]) or 0
     for i = 2, #args do
@@ -98,14 +98,14 @@ LTF.registerCoreFilter("max", function(...)
         end
     end
     return result
-end)
+end
 
 -- Floor
-LTF.registerCoreFilter("floor", function(x)
+LTF.Core["floor"] = function(x)
     return math.floor(toNumberSafe(x) or 0)
-end)
+end
 
 -- Ceil
-LTF.registerCoreFilter("ceil", function(x)
+LTF.Core["ceil"] = function(x)
     return math.ceil(toNumberSafe(x) or 0)
-end)
+end
