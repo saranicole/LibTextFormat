@@ -15,9 +15,11 @@ core/Filters.lua
 core/Protocol.lua
 
 # filters
-filter/Utility.lua
 filters/Icons.lua
 filters/Collections.lua
 filters/Items.lua
+filters/Math.lua
+filters/String.lua
+filter/Utility.lua
 
 LibTextFormat.lua
