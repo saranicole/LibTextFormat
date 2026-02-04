@@ -1,8 +1,9 @@
-LibTextFormat = LibTextFormat or {}
 local LTF = LibTextFormat
 
-LTF.RegisterFilter("house", function(houseId, userId)
+LTF.Core = LTF.Core or {}
+
+LTF.Core["house"] = function(houseId, userId)
     if not houseId then return "" end
-    local username = LTF:NormalizeAccountName(userId)
+    local username = ZO_FormatUserFacingCharacterOrDisplayName(userId)
     return zo_strformat("|H1:housing:<<1>>:<<2>>|h|h", houseId, username)
-end)
+end

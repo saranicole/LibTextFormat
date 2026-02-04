@@ -11,7 +11,7 @@ local function toNumberSafe(value, default)
 end
 
 -- Variadic addition
-LTF.RegisterFilter("add", function(...)
+LTF.registerCoreFilter("add", function(...)
     local args = {...}
     local sum = 0
     for _, v in ipairs(args) do
@@ -21,7 +21,7 @@ LTF.RegisterFilter("add", function(...)
 end)
 
 -- Variadic subtraction (left-to-right)
-LTF.RegisterFilter("sub", function(...)
+LTF.registerCoreFilter("sub", function(...)
     local args = {...}
     local result = toNumberSafe(args[1]) or 0
     for i = 2, #args do
@@ -31,7 +31,7 @@ LTF.RegisterFilter("sub", function(...)
 end)
 
 -- Variadic multiplication
-LTF.RegisterFilter("mul", function(...)
+LTF.registerCoreFilter("mul", function(...)
     local args = {...}
     local product = 1
     for _, v in ipairs(args) do
@@ -41,7 +41,7 @@ LTF.RegisterFilter("mul", function(...)
 end)
 
 -- Variadic division (left-to-right, protect divide by zero)
-LTF.RegisterFilter("div", function(...)
+LTF.registerCoreFilter("div", function(...)
     local args = {...}
     local result = toNumberSafe(args[1]) or 0
     for i = 2, #args do
@@ -53,7 +53,7 @@ LTF.RegisterFilter("div", function(...)
 end)
 
 -- Variadic modulus (left-to-right)
-LTF.RegisterFilter("mod", function(...)
+LTF.registerCoreFilter("mod", function(...)
     local args = {...}
     local result = toNumberSafe(args[1]) or 0
     for i = 2, #args do
@@ -65,7 +65,7 @@ LTF.RegisterFilter("mod", function(...)
 end)
 
 -- Variadic exponentiation (left-to-right)
-LTF.RegisterFilter("pow", function(...)
+LTF.registerCoreFilter("pow", function(...)
     local args = {...}
     local result = toNumberSafe(args[1]) or 0
     for i = 2, #args do
@@ -75,7 +75,7 @@ LTF.RegisterFilter("pow", function(...)
 end)
 
 -- Min of all arguments
-LTF.RegisterFilter("min", function(...)
+LTF.registerCoreFilter("min", function(...)
     local args = {...}
     local result = toNumberSafe(args[1]) or 0
     for i = 2, #args do
@@ -88,7 +88,7 @@ LTF.RegisterFilter("min", function(...)
 end)
 
 -- Max of all arguments
-LTF.RegisterFilter("max", function(...)
+LTF.registerCoreFilter("max", function(...)
     local args = {...}
     local result = toNumberSafe(args[1]) or 0
     for i = 2, #args do
@@ -101,11 +101,11 @@ LTF.RegisterFilter("max", function(...)
 end)
 
 -- Floor
-LTF.RegisterFilter("floor", function(x)
+LTF.registerCoreFilter("floor", function(x)
     return math.floor(toNumberSafe(x) or 0)
 end)
 
 -- Ceil
-LTF.RegisterFilter("ceil", function(x)
+LTF.registerCoreFilter("ceil", function(x)
     return math.ceil(toNumberSafe(x) or 0)
 end)

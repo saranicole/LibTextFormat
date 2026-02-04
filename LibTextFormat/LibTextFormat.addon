@@ -6,6 +6,8 @@
 ## Description: Advanced Text Formatting and Parsing
 ## IsLibrary: true
 
+LibTextFormatGlobals.lua
+
 # core
 core/Helpers.lua
 core/Scope.lua
@@ -13,7 +15,6 @@ core/Filters.lua
 core/Protocol.lua
 
 # filters
-filter/Utility.lua
 filters/Icons.lua
 filters/Collections.lua
 filters/Items.lua

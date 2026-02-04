@@ -1,7 +1,9 @@
 LibTextFormat = LibTextFormat or {}
 local LTF = LibTextFormat
 
-LTF.RegisterFilter("item", function(itemId, style)
+LTF.Core = LTF.Core or {}
+
+LTF.Core["item"] = function(link)
     if not itemId then return "" end
     local realStyle = LINK_STYLE_DEFAULT
     if style == "bracket" then
@@ -9,4 +11,4 @@ LTF.RegisterFilter("item", function(itemId, style)
     end
     local link = GetItemLink(itemId, realStyle)
     return link
-end)
+end

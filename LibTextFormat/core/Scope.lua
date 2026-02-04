@@ -26,6 +26,10 @@ function Scope:Add(key, value)
     self._vars[key] = value
 end
 
+function Scope:List()
+    return self._vars
+end
+
 function Scope:Get(key)
     return self._vars[key]
 end

@@ -32,6 +32,10 @@ function LTF.Scope(initial)
   return LibTextFormatScope:New(initial)
 end
 
+function LTF:RegisterCore()
+  self:RegisterFiltersBulk(self.Core)
+end
+
 local function evalArgs(argStr, scope)
     local args = {}
     for var in argStr:gmatch("[^,]+") do
@@ -42,18 +46,42 @@ local function evalArgs(argStr, scope)
     return args
 end
 
+local function BuildFormatContext(scope, ltf)
+    return {
+        scope = scope,
+        ltf   = ltf,
+        now = GetTimeStamp(),
+    }
+end
+
 function LTF:format(template, scope)
     return (template:gsub("{(.-)}", function(block)
         local parts = splitPipeline(block)
-        local args = evalArgs(parts[1], scope)  -- fetch multiple arguments
 
-        -- Apply filters, left-to-right
-        for i = 2, #parts do
-            local filter = LTF.Filters[parts[i]]
-            if not filter then
-                return "{UNKNOWN FILTER}"
+        local ctx = BuildFormatContext(scope, self)
+
+        -- 1️⃣ Evaluate arguments
+        local args = evalArgs(parts[1], scope)
+
+        -- 2️⃣ Apply pipeline operators
+        for i = 1, #parts do
+            local name = parts[i]
+            local protocol = self:GetProtocol(name)
+            if protocol then
+                if protocol.encode then
+                    args = { protocol:encode(ctx) }
+                else
+                    return "{INVALID PROTOCOL}"
+                end
+
+            -- filter?
+            else
+                local filter = self:GetFilter(name)
+                if not filter then
+                    break
+                end
+                args = { filter(unpack(args)) }
             end
-            args = { filter(unpack(args)) }  -- collapse to single value for next filter
         end
 
         return tostring(args[1])
