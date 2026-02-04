@@ -87,3 +87,9 @@ function LTF:format(template, scope)
         return tostring(args[1])
     end))
 end
+
+function LTF:decodeByProtocolName(protocolName, scope)
+  local protocol = self:GetProtocol(protocolName)
+  local ctx = BuildFormatContext(scope, self)
+  return protocol:decode(ctx)
+end

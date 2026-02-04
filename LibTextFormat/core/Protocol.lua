@@ -51,7 +51,7 @@ local TEMPLATE_SCHEMA =
       optional = true,
       default = function(self, ctx)
         if ctx and next(ctx) then
-          local text = ctx.get("text")
+          local text = ctx.scope:Get("text")
           local delims = self.delimiters
 
           local group  = delims.group
