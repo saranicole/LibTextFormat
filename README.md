@@ -1,6 +1,15 @@
 # LibTextFormat
 Library for Elder Scrolls Online Addons - Advanced Text Formatting and Parsing
 
+## Development Status: alpha  
+(unstable, use at your own risk)
+
+## Description
+This library is to add advanced text parsing and formatting, suitable for use in any precanned communication.
+
+It allows addons to refer to variables in text, such as "{house}" which will output a formatted house link.
+
+It also enables addons to create "protocols" in which you can encode an object into text, then decode it later to get the object back.
+
 ### Links
-[ESO UI](https://www.esoui.com/downloads/info4185-HouseHotkey.html)
-[ESO Mods](https://mods.bethesda.net/en/elderscrollsonline/details/256dc81e-d505-4eb6-9a51-1d7ffc360c69/House_Hotkey)
+[ESO Mods](https://mods.bethesda.net/en/elderscrollsonline/details/cec7b602-5dc0-4af0-a949-cd5483dc7329/LibTextFormat)
