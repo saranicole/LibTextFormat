@@ -5,7 +5,7 @@ local LTF = LibTextFormat
 local function toNumberSafe(value, default)
     default = default or 0
     if value == nil then return default end
-    local n = toNumberSafe(value)
+    local n = tonumber(value)
     if n == nil then return default end
     return n
 end
