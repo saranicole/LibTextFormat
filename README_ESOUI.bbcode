@@ -27,7 +27,7 @@ The first thing LibTextFormat requires you to do is to initialize it with a save
 
 First declare your saved vars
 [code]
-MyAddon.savedVars = ZO_SavedVars:NewAccountWide("MyAddon_Vars", 1, nil, {
+MyAddon.savedVars = ZO_SavedVars:NewAccountWide("MyAddon_Vars", 1, GetWorldName(), {
 libNamespace = {
   LTF = {}
 }})
@@ -53,24 +53,34 @@ MyAddon.LTF:RegisterCore()
 
 One by one:
 [code]
+
 MyAddon.LTF:RegisterFilter("mytag", function(greeting, name)
+
   return greeting..name
+
 end)
+
 [/code]
 
 Or in bulk:
 [code]
+
 local filters = {}
 
 filters["mytag"] = function(greeting, name)
+
   return greeting..name
+
 end
 
 filters["double"] = function(number)
+
   return 2 x tonumber(number)
+
 end
 
 MyAddon.LTF:RegisterFiltersBulk(filters)
+
 [/code]
 
 
@@ -84,8 +94,11 @@ local scope = MyAddon.LTF.Scope({ greeting = "hello", name = GetDisplayName() })
 
 Now that you have your scope, you can pass it around to your object however you like:
 [code]
+
 local template = "{greeting} {name}, how was your day today?"
+
 d(MyAddon.LTF:format(template, scope))
+
 [/code]
 This would render [code]"hello MyUsername, how was your day today?"[/code]
 
@@ -115,9 +128,13 @@ MyAddon.LTF:RegisterProtocol("myprotocol")
 
 Note that the default delimiters are the following:
 [code]
+
   group = "\n"
+
   record = ";"
+
   item = ","
+
 [/code]
 
 Registering a custom protocol with different delimiters for the groups, records, and items:
@@ -133,15 +150,23 @@ An encoding
 
 Encoding scope:
 [code]
+
 local values = {
+
   records = {
+
     { "Alice", "Engineer", { "Lua", "ESO" } },
+
     { "Bob",   "Designer", { "UI", "UX" } },
+
     { "Cara",  "QA",       "Automation" },
+
   }
+
 }
 
 d(MyAddon.LTF:format("myprotocol", MyAddon.LTF.Scope(values))
+
 [/code]
 
 With the overridden delimiters outputs
@@ -156,10 +181,15 @@ MyAddon.LTF:decodeByProtocolName("myprotocol", MyAddon.LTF.Scope({ text = "Alice
 
 Outputs:
 [code]
+
 {
+
   { "Alice", "Engineer", { "Lua", "ESO" } },
+
   { "Bob",   "Designer", { "UI", "UX" } },
-  { "Cara",  "QA",       "Automation" },
+
+  { "Cara",  "QA",       "Automation" }
+
 }
 [/code]
 
@@ -167,23 +197,39 @@ Outputs:
 [size=+2]Available Core Filters[/size]
 
 [code]
+
 house:
+
 * Params:  houseId, userId
+
 * outputs a string in the format "|H1:housing:<<houseId>>:<<userId>>|h|h"
+
 * Usage: "{houseId,userId|house}"
 
+
 icon:
+
 * Params:  link - texture path such as "EsoUI/Art/Journal/journal_Quest_Repeat.dds"
+
 * Optional Params: width, height
+
 * outputs a string in the format "|t<<width>>:<<height>>:<<link>>|t"
+
 * Usage: "{link|icon}" or "{link,width|icon}" or "{link,width,height|icon}"
+
 * Notes: If width is specified but not height, it will use the value of width for height
 
+
 item:
+
 * Params: itemId
+
 * Optional Params: style - can be either empty (default) or "bracket" which generates LINK_STYLE_BRACKETS
+
 * outputs a string with GetItemLink from itemId
+
 * Usage: "{style|itemId}"
+
 [/code]
 
 The remaining core filters:

@@ -26,7 +26,7 @@ The first thing LibTextFormat requires you to do is to initialize it with a save
 
 First declare your saved vars
 ```
-MyAddon.savedVars = ZO_SavedVars:NewAccountWide("MyAddon_Vars", 1, nil, {
+MyAddon.savedVars = ZO_SavedVars:NewAccountWide("MyAddon_Vars", 1, GetWorldName(), {
 libNamespace = {
   LTF = {}
 }})
