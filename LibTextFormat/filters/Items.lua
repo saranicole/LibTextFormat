@@ -3,7 +3,7 @@ local LTF = LibTextFormat
 
 LTF.Core = LTF.Core or {}
 
-LTF.Core["item"] = function(link)
+LTF.Core["item"] = function(itemId)
     if not itemId then return "" end
     local realStyle = LINK_STYLE_DEFAULT
     if style == "bracket" then
