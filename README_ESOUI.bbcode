@@ -11,6 +11,7 @@ It allows addons to refer to variables in text, such as "{house}" which will out
 It also enables addons to create "protocols" in which you can encode an object into text, then decode it later to get the object back.
 
 [size=+3]Reason for being[/size]
+
 Vanilla Lua text formatting is ok in simple circumstances, but it gets hard to read and tedious sprinkling lots of
 [code]"hello"..GetDisplayName().."how are you"..punctuation[/code] everywhere.
 
@@ -21,6 +22,7 @@ Additionally protocols enable encoding of data structures, which is helpful for 
 [size=+3]Basic Usage[/size]
 
 [size=+2]Setup[/size]
+
 The first thing LibTextFormat requires you to do is to initialize it with a saved variables "namespace" so that it can save filters and similar objects specific to your addon.
 
 First declare your saved vars
@@ -185,6 +187,9 @@ item:
 [/code]
 
 The remaining core filters:
+
 Math - add,sub,mul,div,mod,pow,min,max,floor,ceil
+
 String - split,join,substr,lower,upper,trim,gsub,startWith,endsWith,contains,replaceFirst,repeat
+
 Utility - plural,number,string

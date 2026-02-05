@@ -186,8 +186,11 @@ item:
 ```
 
 The remaining core filters:
+
 Math - add,sub,mul,div,mod,pow,min,max,floor,ceil
+
 String - split,join,substr,lower,upper,trim,gsub,startWith,endsWith,contains,replaceFirst,repeat
+
 Utility - plural,number,string
 
 
