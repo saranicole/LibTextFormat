@@ -34,7 +34,7 @@ jobs:
         run: |
           addon_name="${{ env.REPO_NAME }}"
           version="${{ steps.semver.outputs.nextStrict }}"
-          formatted_version=$( echo "${version//./}" | )
+          formatted_version=$( echo "${version//./}" )
 
           echo "ADDON_NAME=$addon_name" >> $GITHUB_ENV
           echo "ADDON_VERSION=$version" >> $GITHUB_ENV
