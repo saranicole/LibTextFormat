@@ -141,10 +141,10 @@ recordSep = "\n"
 ```
 
 
-"tocsv" usage
+"fromcsv" usage
 ```
 
-local scope = MyAddon.LTF.Scope({ recordSep = ";", mytext = "first,second,third;a,b,c" }
+local scope = MyAddon.LTF.Scope({ recordSep = ";", fromcsv = "first,second,third;a,b,c" }
 
 local object = MyAddon.LTF:format("{mytext|fromcsv}", ))
 
@@ -152,12 +152,12 @@ local object = MyAddon.LTF:format("{mytext|fromcsv}", ))
 
 ```
 
-"fromcsv" usage
+"tocsv" usage
 ```
 
-local scope = MyAddon.LTF.Scope({ recordSep = ";", myobject = {{ [first], [second], [third] }, {[a], [b], [c]}} }
+local scope = MyAddon.LTF.Scope({ recordSep = ";", tocsv = {{ [first], [second], [third] }, {[a], [b], [c]}} }
 
-local mytext = MyAddon.LTF:format("{myobject|tocsv}", ))
+local mytext = MyAddon.LTF:format("{tocsv}", ))
 
 -- outputs text tfirst,second,third;a,b,c
 
@@ -166,9 +166,9 @@ local mytext = MyAddon.LTF:format("{myobject|tocsv}", ))
 "todotpath" usage
 ```
 
-local scope = MyAddon.LTF.Scope({ recordSep = ";", myobject = { [1] = { [1] = "BS", [2] = { [1] = { "researchIndex" = 2, "traitIndex" = 1 } } }, [2] = { [1] = "CL", [2] = { [1] = { "researchIndex" = 2, "traitIndex" = 1 } } }  } }
+local scope = MyAddon.LTF.Scope({ recordSep = ";", todotpath = { [1] = { [1] = "BS", [2] = { [1] = { "researchIndex" = 2, "traitIndex" = 1 } } }, [2] = { [1] = "CL", [2] = { [1] = { "researchIndex" = 2, "traitIndex" = 1 } } }  } }
 
-local object = MyAddon.LTF:format("{myobject|todotpath}", ))
+local object = MyAddon.LTF:format("{todotpath}", ))
 
 -- outputs text "1.BS.1.researchIndex=2;1.BS.1.traitIndex=1;2.CL.1.researchIndex=2;2.CL.1.traitIndex=1"
 
@@ -178,9 +178,9 @@ local object = MyAddon.LTF:format("{myobject|todotpath}", ))
 
 ```
 
-local scope = MyAddon.LTF.Scope({ recordSep = ";", mytext = "1.BS.1.researchIndex=2;1.BS.1.traitIndex=1;2.CL.1.researchIndex=2;2.CL.1.traitIndex=1" }
+local scope = MyAddon.LTF.Scope({ recordSep = ";", fromdotpath = "1.BS.1.researchIndex=2;1.BS.1.traitIndex=1;2.CL.1.researchIndex=2;2.CL.1.traitIndex=1" }
 
-local object = MyAddon.LTF:format("{mytext|fromdotpath}", ))
+local object = MyAddon.LTF:format("{fromdotpath}", ))
 
 -- outputs object { [1] = { [1] = "BS", [2] = { [1] = { "researchIndex" = 2, "traitIndex" = 1 } } }, [2] = { [1] = "CL", [2] = { [1] = { "researchIndex" = 2, "traitIndex" = 1 } } }  }
 
