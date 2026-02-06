@@ -51,9 +51,9 @@ Parameters are passed in sequentially and separated by a comma "," in the filter
 {greeting,name|mytag}
 [/code]
 
-Now you can also register "core" filters which includes the house filter, among others:
+Register "core" filters which includes the house filter, among others.  It is recommended to leverage the versioning feature - pin your usage to "v1" so that breaking changes do not impact your code.
 [code]
-MyAddon.LTF:RegisterCore()
+MyAddon.LTF:RegisterCore("v1")
 [/code]
 
 One by one:
@@ -107,9 +107,10 @@ d(MyAddon.LTF:format(template, scope))
 [/code]
 This would render [code]"hello MyUsername, how was your day today?"[/code]
 
-Note that when the filter takes a parameter, you can pass in the variable name as the first argument, it does not have to be the value.
+Note that when the filter takes a parameter, you pass the variable that contains the value into the Scope.  The variable must have the same name as the parameter, so { houseId = 7 } when the parameter is called houseId.
+
 So for
-[code]"{houseId,userId|house}"[/code]
+[code]"{house}"[/code]
 and a scope of
 [code]
 {
@@ -126,78 +127,34 @@ Protocols are not text substitutions, they are a way to encode objects in text. 
 
 Go through the same steps as above, but with the registration part you will use RegisterProtocol
 
-Registering a custom protocol with the defaults - note that "myprotocol" will be the tag analogous to a filter string:
-[code]
-MyAddon.LTF:RegisterProtocol("myprotocol")
-[/code]
+Although you can register a custom protocol, I encourage you to use the prebaked "tocsv"/"fromcsv" and "todotpath"/"fromdotpath".
 
-Note that the default delimiters are the following:
 [code]
 
-  group = "\n"
+MyAddon.LTF:RegisterProtocol("toformat", function(ctx, value)
 
-  record = ";"
+  -- custom encoding happens here
 
-  item = ","
+  -- ctx holds all variables passed in from scope
 
-[/code]
+  -- value holds the object to serialize into your format
 
-Registering a custom protocol with different delimiters for the groups, records, and items:
-[code]
-MyAddon.LTF:RegisterProtocol("myprotocol", {delimiters = { group = ":", record = ";", item = "," }})
-[/code]
-Note that you cannot provide a delimiters object with only one field overridden, you have to pass in a complete delimiters object with all three fields, even if they match the default.
+end)
 
-A protocol must pass an object that contains the field "text" for encoding, and a field "records" for decoding.
-They can be the same scope object, so long as both of those fields are present.  If they are separate objects, they only need the field related to the encoding/decoding operation.
 
-An encoding
+MyAddon.LTF:RegisterProtocol("fromformat", function(ctx, value)
 
-Encoding scope:
-[code]
+  -- custom decoding happens here
 
-local values = {
+  -- ctx holds all variables passed in from scope
 
-  records = {
+  -- value holds the text to decode into your format
 
-    { "Alice", "Engineer", { "Lua", "ESO" } },
-
-    { "Bob",   "Designer", { "UI", "UX" } },
-
-    { "Cara",  "QA",       "Automation" },
-
-  }
-
-}
-
-d(MyAddon.LTF:format("myprotocol", MyAddon.LTF.Scope(values))
+end)
 
 [/code]
 
-With the overridden delimiters outputs
-[code]
-Alice;Engineer;Lua,ESO:Bob;Designer;UI,UX:Cara;QA;Automation
-[/code]
-
-Decoding is accomplished like so:
-[code]
-MyAddon.LTF:decodeByProtocolName("myprotocol", MyAddon.LTF.Scope({ text = "Alice;Engineer;Lua,ESO:Bob;Designer;UI,UX:Cara;QA;Automation" })
-[/code]
-
-Outputs:
-[code]
-
-{
-
-  { "Alice", "Engineer", { "Lua", "ESO" } },
-
-  { "Bob",   "Designer", { "UI", "UX" } },
-
-  { "Cara",  "QA",       "Automation" }
-
-}
-[/code]
-
+In the case of a protocol, you still use the regular MyAddon.LTF:format function to process your templates, but it will return an object if it receives a protocol prefixed with "from".
 
 [size=+2]Available Core Filters[/size]
 

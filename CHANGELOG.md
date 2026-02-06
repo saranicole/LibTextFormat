@@ -1,3 +1,6 @@
+## 2025.02.06
+- Protocol refactor
+
 ## 2025.02.05
 - Fixes, added documentation
 

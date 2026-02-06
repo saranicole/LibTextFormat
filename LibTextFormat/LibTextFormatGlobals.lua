@@ -2,6 +2,15 @@ LibTextFormat = ZO_DeferredInitializingObject:Subclass()
 
 local LTF = LibTextFormat
 
+-- For the special case of math operations we always convert from strings
+function LTF:toNumberSafe(value, default)
+    default = default or 0
+    if value == nil then return default end
+    local n = tonumber(value)
+    if n == nil then return default end
+    return n
+end
+
 function LTF:ListVars()
   return self.savedVars
 end
@@ -11,6 +20,19 @@ function LTF:GetVar(key)
   return vars[key]
 end
 
+function LTF:DeleteFromVarsByValue(key, value)
+  local var = self:GetVar(key)
+  if var ~= nil then
+    for k, v in pairs(var) do
+      if value == k then
+        var[key][value] = nil
+        return true
+      end
+    end
+  end
+  return false
+end
+
 function LTF:SaveToVars(key, value)
   self.savedVars[key] = value
 end
@@ -18,7 +40,7 @@ end
 function LTF:GetVarByValue(key, value)
   local var = self:GetVar(key)
   if var ~= nil then
-    for k, v in pairs(self:GetVar(key)) do
+    for k, v in pairs(var) do
       if value == k then
         return v
       end

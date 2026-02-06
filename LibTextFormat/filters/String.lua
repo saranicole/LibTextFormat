@@ -1,7 +1,9 @@
 LibTextFormat = LibTextFormat or {}
 local LTF = LibTextFormat
 
-LTF.Core["split"] = function(str, delim)
+LTF.Core = LTF.Core or { ["v1"] = {} }
+
+LTF.Core["v1"]["split"] = function(str, delim)
     str = tostring(str or "")
     delim = delim or "%s"  -- default whitespace
     local t = {}
@@ -11,61 +13,61 @@ LTF.Core["split"] = function(str, delim)
     return t
 end
 
-LTF.Core["join"] = function(tbl, sep)
+LTF.Core["v1"]["join"] = function(tbl, sep)
     sep = sep or ""
     if type(tbl) ~= "table" then return tostring(tbl or "") end
     return table.concat(tbl, sep)
 end
 
-LTF.Core["substr"] = function(str, startIdx, length)
+LTF.Core["v1"]["substr"] = function(str, startIdx, length)
     str = tostring(str or "")
-    startIdx = toNumberSafe(startIdx, 1)
+    startIdx = LTF:toNumberSafe(startIdx, 1)
     if length ~= nil then
-        length = toNumberSafe(length)
+        length = LTF:toNumberSafe(length)
         return string.sub(str, startIdx, startIdx + length - 1)
     else
         return string.sub(str, startIdx)
     end
 end
 
-LTF.Core["lower"] = function(str)
+LTF.Core["v1"]["lower"] = function(str)
     return tostring(str or ""):lower()
 end
 
-LTF.Core["upper"] = function(str)
+LTF.Core["v1"]["upper"] = function(str)
     return tostring(str or ""):upper()
 end
 
-LTF.Core["trim"] = function(str)
+LTF.Core["v1"]["trim"] = function(str)
     return tostring(str or ""):match("^%s*(.-)%s*$")
 end
 
-LTF.Core["gsub"] = function(str, pattern, replacement)
+LTF.Core["v1"]["gsub"] = function(str, pattern, replacement)
     str = tostring(str or "")
     pattern = tostring(pattern or "")
     replacement = tostring(replacement or "")
     return string.gsub(str, pattern, replacement)
 end
 
-LTF.Core["startsWith"] = function(str, prefix)
+LTF.Core["v1"]["startsWith"] = function(str, prefix)
     str = tostring(str or "")
     prefix = tostring(prefix or "")
     return str:sub(1, #prefix) == prefix
 end
 
-LTF.Core["endsWith"] = function(str, suffix)
+LTF.Core["v1"]["endsWith"] = function(str, suffix)
     str = tostring(str or "")
     suffix = tostring(suffix or "")
     return str:sub(-#suffix) == suffix
 end
 
-LTF.Core["contains"] = function(str, substr)
+LTF.Core["v1"]["contains"] = function(str, substr)
     str = tostring(str or "")
     substr = tostring(substr or "")
     return str:find(substr, 1, true) ~= nil
 end
 
-LTF.Core["replaceFirst"] = function(str, pattern, replacement)
+LTF.Core["v1"]["replaceFirst"] = function(str, pattern, replacement)
     str = tostring(str or "")
     pattern = tostring(pattern or "")
     replacement = tostring(replacement or "")
@@ -74,8 +76,8 @@ LTF.Core["replaceFirst"] = function(str, pattern, replacement)
     return s
 end
 
-LTF.Core["repeat"] = function(str, times)
+LTF.Core["v1"]["repeat"] = function(str, times)
     str = tostring(str or "")
-    times = toNumberSafe(times, 1)
+    times = LTF:toNumberSafe(times, 1)
     return str:rep(times)
 end
