@@ -18,8 +18,10 @@ core/Protocol.lua
 filters/Icons.lua
 filters/Collections.lua
 filters/Items.lua
-filters/Math.lua
-filters/String.lua
 filter/Utility.lua
+
+# protocols
+protocols/Csv.lua
+protocols/DotPaths.lua
 
 LibTextFormat.lua

@@ -1,6 +1,6 @@
 local LTF = LibTextFormat
 
-LTF.Core = LTF.Core or {}
+LTF.Core = LTF.Core or { ["v1"] = {} }
 
 local function NormalizeAccountName(name)
     if not IsDecoratedDisplayName(name) then
@@ -9,8 +9,8 @@ local function NormalizeAccountName(name)
     return name
 end
 
-LTF.Core["house"] = function(houseId, userId)
-    if not houseId then return "" end
-    local username = NormalizeAccountName(userId)
-    return zo_strformat("|H1:housing:<<1>>:<<2>>|h|h", houseId, username)
+LTF.Core["v1"]["house"] = function(ctx, text)
+    if not ctx.houseId then return "" end
+    local username = NormalizeAccountName(ctx.userId)
+    return text..zo_strformat("|H1:housing:<<1>>:<<2>>|h|h", ctx.houseId, ctx.username)
 end

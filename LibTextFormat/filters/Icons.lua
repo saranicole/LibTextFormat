@@ -1,14 +1,14 @@
 LibTextFormat = LibTextFormat or {}
 local LTF = LibTextFormat
 
-LTF.Core = LTF.Core or {}
+LTF.Core = LTF.Core or { ["v1"] = {} }
 
-LTF.Core["icon"] = function(link, width, height)
-  if not width then
-    width = 16
+LTF.Core["v1"]["icon"] = function(ctx, text)
+  if not ctx.width then
+    ctx.width = 16
   end
-  if not height then
-    height = width
+  if not ctx.height then
+    ctx.height = ctx.width
   end
-  return zo_iconFormat(link, width, height)
+  return text..zo_iconFormat(ctx.link, ctx.width, ctx.height)
 end

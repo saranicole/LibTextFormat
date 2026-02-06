@@ -15,6 +15,10 @@ LibTextFormat = LibTextFormat or {}
 
 local LTF = LibTextFormat
 
+LTF.defaultVersion = "v1"
+
+local rendersPrefix = "from"
+
 local function splitPipeline(block)
     local argsPart, pipePart = block:match("^(.-)|(.+)$")
     if not argsPart then
@@ -32,18 +36,16 @@ function LTF.Scope(initial)
   return LibTextFormatScope:New(initial)
 end
 
-function LTF:RegisterCore()
-  self:RegisterFiltersBulk(self.Core)
+function LTF:RegisterCore(version, selectiveOverrides)
+  version = version or self.defaultVersion
+  selectiveOverrides = selectiveOverrides or {}
+  self:RegisterProtocolsBulk(self.CoreProtocols, version, selectiveOverrides)
+  self:RegisterFiltersBulk(self.Core, version, selectiveOverrides)
 end
 
-local function evalArgs(argStr, scope)
-    local args = {}
-    for var in argStr:gmatch("[^,]+") do
-        var = zo_strtrim(var)          -- remove whitespace
-        local value = scope:Get(var)
-        table.insert(args, value)
-    end
-    return args
+local function SeedValue(expr, ctx)
+    -- expr = "my.path" or "foo,bar" if you want later
+    return ctx.scope:Get(expr)
 end
 
 local function BuildFormatContext(scope, ltf)
@@ -51,45 +53,71 @@ local function BuildFormatContext(scope, ltf)
         scope = scope,
         ltf   = ltf,
         now = GetTimeStamp(),
+        itemSep = scope:Get("itemSep"),
+        pathSep = scope:Get("pathSep"),
+        recordSep = scope:Get("recordSep")
     }
 end
 
-function LTF:format(template, scope)
-    return (template:gsub("{(.-)}", function(block)
-        local parts = splitPipeline(block)
-
-        local ctx = BuildFormatContext(scope, self)
-
-        -- 1️⃣ Evaluate arguments
-        local args = evalArgs(parts[1], scope)
-
-        -- 2️⃣ Apply pipeline operators
-        for i = 1, #parts do
-            local name = parts[i]
-            local protocol = self:GetProtocol(name)
-            if protocol then
-                if protocol.encode then
-                    args = { protocol:encode(ctx) }
-                else
-                    return "{INVALID PROTOCOL}"
-                end
-
-            -- filter?
-            else
-                local filter = self:GetFilter(name)
-                if not filter then
-                    break
-                end
-                args = { filter(unpack(args)) }
-            end
-        end
-
-        return tostring(args[1])
-    end))
+function LTF:GetStage(name)
+    return self:GetProtocol(name) or self:GetFilter(name)
 end
 
-function LTF:decodeByProtocolName(protocolName, scope)
-  local protocol = self:GetProtocol(protocolName)
-  local ctx = BuildFormatContext(scope, self)
-  return protocol:decode(ctx)
+local function IsPureExpression(template)
+    return template:match("^%s*{[^}]+}%s*$") ~= nil
+end
+
+local function returnsObject(protocolName)
+  if protocolName:sub(1, #rendersPrefix) == rendersPrefix then
+    return true
+  end
+  return false
+end
+
+function LTF:eval(block, scope)
+    local parts = splitPipeline(block)
+    local ctx   = BuildFormatContext(scope, self)
+
+    local value
+    local lastRenderer
+
+    for _, part in ipairs(parts) do
+        part = zo_strtrim(part)
+
+        local stage = self:GetStage(part)
+        if stage then
+            value = stage(ctx, value)
+
+            if returnsObject(part) then
+                lastRenderer = stage
+            end
+        else
+            value = scope:Get(part)
+        end
+    end
+
+    return value, lastRenderer
+end
+
+function LTF:format(template, scope)
+  if IsPureExpression(template) then
+      local block = template:match("{(.-)}")
+      return self:eval(block, scope)
+  end
+  return (template:gsub("{(.-)}", function(block)
+      local value, renderer = self:eval(block, scope)
+
+      if type(value) ~= "string" then
+          local ctx = BuildFormatContext(scope, self)
+
+          if renderer then
+              return renderer(ctx, value)
+          end
+
+          -- last-resort fallback
+          return tostring(value)
+      end
+
+      return value
+  end))
 end
