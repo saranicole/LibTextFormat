@@ -14,7 +14,7 @@ LTF.CoreProtocols["v1"]["tocsv"] = function(ctx, value)
   local out = ""
   for i = 1, ipairs(value) do
     local record = table.concat(value[i], sep)
-    out..recordSep..record
+    out = out..recordSep..record
   end
   return out
 end
