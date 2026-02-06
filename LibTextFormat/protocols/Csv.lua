@@ -7,54 +7,42 @@ LTF.ProtocolMeta = LTF.ProtocolMeta or {
     fromcsv = { consumes = "string", produces = "table" },
 }
 
-LTF.CoreProtocols["v1"]["tocsv"] = function(ctx, text)
+LTF.CoreProtocols["v1"]["tocsv"] = function(ctx, value)
   local sep = ctx.pathSep or ","
-  return table.concat(text, sep)
+  local recordSep = ctx.recordSep or "\n"
+
+  local out = ""
+  for i = 1, ipairs(value) do
+    local record = table.concat(value[i], sep)
+    out..recordSep..record
+  end
+  return out
 end
 
 LTF.CoreProtocols["v1"]["fromcsv"] = function(ctx, text)
-  local result = {}
-  local i = 1
-  local sep = ctx.pathSep or ","
+    local sep = ctx.pathSep or ","
+    local recordSep = ctx.recordSep or "\n"
 
-  while #text > 0 do
-      if text:sub(1,1) == '"' then
-          -- quoted field
-          local val = ""
-          text = text:sub(2)
+    -- split text into records
+    local records = {}
+    local pos = 1
+    while pos <= #text do
+        local rsep_pos = text:find(recordSep, pos, true)
+        if rsep_pos then
+            table.insert(records, text:sub(pos, rsep_pos - 1))
+            pos = rsep_pos + #recordSep
+        else
+            table.insert(records, text:sub(pos))
+            break
+        end
+    end
 
-          while true do
-              local quotePos = text:find('"', 1, true)
-              if not quotePos then
-                  error("LTF: Malformed CSV, missing quote")
-              end
+    -- parse each record into fields
+    local result = {}
+    for _, record in ipairs(records) do
+        table.insert(result, parseFields(record, sep))
+    end
 
-              val = val .. text:sub(1, quotePos - 1)
-              text = text:sub(quotePos + 1)
-
-              if text:sub(1,1) == '"' then
-                  val = val .. '"'
-                  text = text:sub(2)
-              else
-                  break
-              end
-          end
-
-          table.insert(result, val)
-      else
-          local commaPos = text:find(delimiter, 1, true)
-          if commaPos then
-              table.insert(result, text:sub(1, commaPos - 1))
-              text = text:sub(commaPos + 1)
-          else
-              table.insert(result, text)
-              text = ""
-          end
-      end
-
-      if text:sub(1,1) == sep then
-          text = text:sub(2)
-      end
-  end
-  return result
+    return result
 end
+

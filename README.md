@@ -88,9 +88,10 @@ d(MyAddon.LTF:format(template, scope))
 ```
 This would render ```"hello MyUsername, how was your day today?"```
 
-Note that when the filter takes a parameter, you can pass in the variable name as the first argument, it does not have to be the value.
+Note that when the filter takes a parameter, you pass the variable that contains the value into the Scope.  The variable must have the same name as the parameter, so { houseId = 7 } when the parameter is called houseId.
+
 So for
-```"{houseId,userId|house}"```
+```"{house}"```
 and a scope of
 ```
 {
@@ -103,13 +104,89 @@ It will render the house link.  The filter will retrieve the value of the variab
 
 ### Protocols
 
-
 Protocols are not text substitutions, they are a way to encode objects in text.  You would use them to serialize an object and pass it somewhere else.
 
 Go through the same steps as above, but with the registration part you will use RegisterProtocol
 
 Although you can register a custom protocol, I encourage you to use the prebaked "tocsv"/"fromcsv" and "todotpath"/"fromdotpath".
 
+Note that in these examples the record delimiter is overridden.
+
+To override the delimiters pass the following variables in scope (to/from dotpath protocol defaults shown below):
+
+todotpath / fromdotpath delimiter defaults
+
+```
+
+itemSep = "="
+
+pathSep = "."
+
+-- new line
+
+recordSep = "\n"
+
+```
+
+tocsv / fromcsv delimiter defaults
+
+```
+
+pathSep = ","
+
+-- new line
+
+recordSep = "\n"
+
+```
+
+
+"tocsv" usage
+```
+
+local scope = MyAddon.LTF.Scope({ recordSep = ";", mytext = "first,second,third;a,b,c" }
+
+local object = MyAddon.LTF:format("{mytext|fromcsv}", ))
+
+-- outputs object {{ [first], [second], [third] }, {[a], [b], [c]}}
+
+```
+
+"fromcsv" usage
+```
+
+local scope = MyAddon.LTF.Scope({ recordSep = ";", myobject = {{ [first], [second], [third] }, {[a], [b], [c]}} }
+
+local mytext = MyAddon.LTF:format("{myobject|tocsv}", ))
+
+-- outputs text tfirst,second,third;a,b,c
+
+```
+
+"todotpath" usage
+```
+
+local scope = MyAddon.LTF.Scope({ recordSep = ";", myobject = { [1] = { [1] = "BS", [2] = { [1] = { "researchIndex" = 2, "traitIndex" = 1 } } }, [2] = { [1] = "CL", [2] = { [1] = { "researchIndex" = 2, "traitIndex" = 1 } } }  } }
+
+local object = MyAddon.LTF:format("{myobject|todotpath}", ))
+
+-- outputs text "1.BS.1.researchIndex=2;1.BS.1.traitIndex=1;2.CL.1.researchIndex=2;2.CL.1.traitIndex=1"
+
+```
+
+"fromdotpath" usage
+
+```
+
+local scope = MyAddon.LTF.Scope({ recordSep = ";", mytext = "1.BS.1.researchIndex=2;1.BS.1.traitIndex=1;2.CL.1.researchIndex=2;2.CL.1.traitIndex=1" }
+
+local object = MyAddon.LTF:format("{mytext|fromdotpath}", ))
+
+-- outputs object { [1] = { [1] = "BS", [2] = { [1] = { "researchIndex" = 2, "traitIndex" = 1 } } }, [2] = { [1] = "CL", [2] = { [1] = { "researchIndex" = 2, "traitIndex" = 1 } } }  }
+
+```
+
+Custom protocol
 ```
 
 MyAddon.LTF:RegisterProtocol("toformat", function(ctx, value)
@@ -132,41 +209,62 @@ MyAddon.LTF:RegisterProtocol("fromformat", function(ctx, value)
   -- value holds the text to decode into your format
 
 end)
+
 ```
 
 In the case of a protocol, you still use the regular MyAddon.LTF:format function to process your templates, but it will return an object if it receives a protocol prefixed with "from".
 
-
 ### Available Core Filters
 
+**All parameters must be passed through the scope by using field names that match the filter's parameters.**
+
 ```
+
 house:
+
 * Params:  houseId, userId
+
 * outputs a string in the format "|H1:housing:<<houseId>>:<<userId>>|h|h"
-* Usage: "{houseId,userId|house}"
+
+* Usage: "{house}"
+
 
 icon:
+
 * Params:  link - texture path such as "EsoUI/Art/Journal/journal_Quest_Repeat.dds"
+
 * Optional Params: width, height
+
 * outputs a string in the format "|t<<width>>:<<height>>:<<link>>|t"
-* Usage: "{link|icon}" or "{link,width|icon}" or "{link,width,height|icon}"
+
+* Usage: "{icon}"
+
 * Notes: If width is specified but not height, it will use the value of width for height
 
+
 item:
+
 * Params: itemId
+
 * Optional Params: style - can be either empty (default) or "bracket" which generates LINK_STYLE_BRACKETS
+
 * outputs a string with GetItemLink from itemId
-* Usage: "{style|itemId}"
+
+* Usage: "{itemId}"
+
+
+plural:
+
+* Params: count, singular
+
+* Optional Params: plural - uses singular .. "s" if no plural provided
+
+* outputs a string formatted as a plural noun
+
+* Usage: "{plural}"
+
+
 ```
-
-The remaining core filters:
-
-Math - add,sub,mul,div,mod,pow,min,max,floor,ceil
-
-String - split,join,substr,lower,upper,trim,gsub,startWith,endsWith,contains,replaceFirst,repeat
-
-Utility - plural,number,string
-
 
 ### Links
 [ESOUI](https://www.esoui.com/downloads/info4380-LibTextFormat.html)

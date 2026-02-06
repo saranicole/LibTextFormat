@@ -15,10 +15,6 @@ LibTextFormat = LibTextFormat or {}
 
 local LTF = LibTextFormat
 
-LTF.defaultItemSep = "="
-LTF.defaultPathSep = "."
-LTF.defaultRecordSep = "\n"
-
 LTF.defaultVersion = "v1"
 
 local rendersPrefix = "from"
@@ -57,9 +53,9 @@ local function BuildFormatContext(scope, ltf)
         scope = scope,
         ltf   = ltf,
         now = GetTimeStamp(),
-        itemSep = scope:Get("itemSep") or LTF.defaultItemSep,
-        pathSep = scope:Get("pathSep") or LTF.defaultPathSep,
-        recordSep = scope:Get("recordSep") or LTF.defaultRecordSep
+        itemSep = scope:Get("itemSep"),
+        pathSep = scope:Get("pathSep"),
+        recordSep = scope:Get("recordSep")
     }
 end
 

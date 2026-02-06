@@ -129,6 +129,83 @@ Go through the same steps as above, but with the registration part you will use 
 
 Although you can register a custom protocol, I encourage you to use the prebaked "tocsv"/"fromcsv" and "todotpath"/"fromdotpath".
 
+Note that in these examples the record delimiter is overridden.
+
+To override the delimiters pass the following variables in scope (to/from dotpath protocol defaults shown below):
+
+todotpath / fromdotpath delimiter defaults
+
+[code]
+
+itemSep = "="
+
+pathSep = "."
+
+-- new line
+
+recordSep = "\n"
+
+[/code]
+
+tocsv / fromcsv delimiter defaults
+
+[code]
+
+pathSep = ","
+
+-- new line
+
+recordSep = "\n"
+
+[/code]
+
+
+"tocsv" usage
+[code]
+
+local scope = MyAddon.LTF.Scope({ recordSep = ";", mytext = "first,second,third;a,b,c" }
+
+local object = MyAddon.LTF:format("{mytext|fromcsv}", ))
+
+-- outputs object {{ [first], [second], [third] }, {[a], [b], [c]}}
+
+[/code]
+
+"fromcsv" usage
+[code]
+
+local scope = MyAddon.LTF.Scope({ recordSep = ";", myobject = {{ [first], [second], [third] }, {[a], [b], [c]}} }
+
+local mytext = MyAddon.LTF:format("{myobject|tocsv}", ))
+
+-- outputs text tfirst,second,third;a,b,c
+
+[/code]
+
+"todotpath" usage
+[code]
+
+local scope = MyAddon.LTF.Scope({ recordSep = ";", myobject = { [1] = { [1] = "BS", [2] = { [1] = { "researchIndex" = 2, "traitIndex" = 1 } } }, [2] = { [1] = "CL", [2] = { [1] = { "researchIndex" = 2, "traitIndex" = 1 } } }  } }
+
+local object = MyAddon.LTF:format("{myobject|todotpath}", ))
+
+-- outputs text "1.BS.1.researchIndex=2;1.BS.1.traitIndex=1;2.CL.1.researchIndex=2;2.CL.1.traitIndex=1"
+
+[/code]
+
+"fromdotpath" usage
+
+[code]
+
+local scope = MyAddon.LTF.Scope({ recordSep = ";", mytext = "1.BS.1.researchIndex=2;1.BS.1.traitIndex=1;2.CL.1.researchIndex=2;2.CL.1.traitIndex=1" }
+
+local object = MyAddon.LTF:format("{mytext|fromdotpath}", ))
+
+-- outputs object { [1] = { [1] = "BS", [2] = { [1] = { "researchIndex" = 2, "traitIndex" = 1 } } }, [2] = { [1] = "CL", [2] = { [1] = { "researchIndex" = 2, "traitIndex" = 1 } } }  }
+
+[/code]
+
+Custom protocol
 [code]
 
 MyAddon.LTF:RegisterProtocol("toformat", function(ctx, value)
@@ -158,6 +235,8 @@ In the case of a protocol, you still use the regular MyAddon.LTF:format function
 
 [size=+2]Available Core Filters[/size]
 
+[color=orange]All parameters must be passed through the scope by using field names that match the filter's parameters.[/color]
+
 [code]
 
 house:
@@ -166,7 +245,7 @@ house:
 
 * outputs a string in the format "|H1:housing:<<houseId>>:<<userId>>|h|h"
 
-* Usage: "{houseId,userId|house}"
+* Usage: "{house}"
 
 
 icon:
@@ -177,7 +256,7 @@ icon:
 
 * outputs a string in the format "|t<<width>>:<<height>>:<<link>>|t"
 
-* Usage: "{link|icon}" or "{link,width|icon}" or "{link,width,height|icon}"
+* Usage: "{icon}"
 
 * Notes: If width is specified but not height, it will use the value of width for height
 
@@ -190,14 +269,22 @@ item:
 
 * outputs a string with GetItemLink from itemId
 
-* Usage: "{style|itemId}"
+* Usage: "{itemId}"
+
+
+plural:
+
+* Params: count, singular
+
+* Optional Params: plural - uses singular .. "s" if no plural provided
+
+* outputs a string formatted as a plural noun
+
+* Usage: "{plural}"
+
 
 [/code]
 
-The remaining core filters:
-
-Math - add,sub,mul,div,mod,pow,min,max,floor,ceil
-
-String - split,join,substr,lower,upper,trim,gsub,startWith,endsWith,contains,replaceFirst,repeat
-
-Utility - plural,number,string
+### Links
+[ESOUI](https://www.esoui.com/downloads/info4380-LibTextFormat.html)
+[ESO Mods](https://mods.bethesda.net/en/elderscrollsonline/details/cec7b602-5dc0-4af0-a949-cd5483dc7329/LibTextFormat)
