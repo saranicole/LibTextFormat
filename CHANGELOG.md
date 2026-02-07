@@ -1,3 +1,6 @@
+## 2025.02.07
+- Fix dotpath
+
 ## 2025.02.06
 - Protocol refactor
 - Added versioning

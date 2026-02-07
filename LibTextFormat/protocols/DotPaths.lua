@@ -146,7 +146,7 @@ LTF.CoreProtocols["v1"]["todotpath"] = function(ctx, value, part)
     return table.concat(lines, recordSep)
 end
 
-LTF.CoreProtocols["v1"]["fromdotpath"] = function(ctx, value)
+LTF.CoreProtocols["v1"]["fromdotpath"] = function(ctx, value, part)
 
     local value = value or ctx.scope:Get(part)
 
