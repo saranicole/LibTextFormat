@@ -100,10 +100,6 @@ function LTF:eval(block, scope)
 end
 
 function LTF:format(template, scope)
-  d("template")
-  d(template)
-  d("IsPureExpression(template)")
-  d(IsPureExpression(template))
   if IsPureExpression(template) then
       local block = template:match("{(.-)}")
       return self:eval(block, scope)
