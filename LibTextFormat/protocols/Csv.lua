@@ -8,8 +8,9 @@ LTF.ProtocolMeta = LTF.ProtocolMeta or {
 }
 
 LTF.CoreProtocols["v1"]["tocsv"] = function(ctx, value)
-  local sep = ctx.pathSep or ","
-  local recordSep = ctx.recordSep or "\n"
+  value = value or {}
+  local sep = ctx.scope:Get("pathSep") or ","
+  local recordSep = ctx.scope:Get("recordSep") or "\n"
 
   local out = ""
   for i = 1, ipairs(value) do
@@ -20,8 +21,9 @@ LTF.CoreProtocols["v1"]["tocsv"] = function(ctx, value)
 end
 
 LTF.CoreProtocols["v1"]["fromcsv"] = function(ctx, text)
-    local sep = ctx.pathSep or ","
-    local recordSep = ctx.recordSep or "\n"
+    local text = text or ""
+    local sep = ctx.scope:Get("pathSep") or ","
+    local recordSep = ctx.scope:Get("recordSep") or "\n"
 
     -- split text into records
     local records = {}

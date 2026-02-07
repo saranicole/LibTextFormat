@@ -125,14 +125,11 @@ local function Flatten(obj, prefix, out, ctx)
     return out
 end
 
-LTF.CoreProtocols["v1"]["todotpath"] = function(ctx, value)
-
-    if type(value) ~= "table" then
-        return ""
-    end
-
-    local sep = ctx.pathSep or "."
-    local recordSep = ctx.recordSep or "\n"
+LTF.CoreProtocols["v1"]["todotpath"] = function(ctx, value, part)
+    local value = value or ctx.scope:Get(part)
+    local sep = ctx.scope:Get("pathSep") or "."
+    local recordSep = ctx.scope:Get("recordSep") or "\n"
+    local itemSep = ctx.scope:Get("itemSep") or "="
 
     local fields = Flatten(value, nil, nil, ctx)
 
@@ -142,7 +139,7 @@ LTF.CoreProtocols["v1"]["todotpath"] = function(ctx, value)
 
     local lines = {}
     for _, f in ipairs(fields) do
-        lines[#lines+1] = f.key .. "=" .. FormatValue(f.value)
+        lines[#lines+1] = f.key .. itemSep .. FormatValue(f.value)
     end
 
 
@@ -150,13 +147,12 @@ LTF.CoreProtocols["v1"]["todotpath"] = function(ctx, value)
 end
 
 LTF.CoreProtocols["v1"]["fromdotpath"] = function(ctx, value)
-    if type(value) ~= "string" then
-        return {}
-    end
 
-    local sep = ctx.pathSep or "."
-    local recordSep = ctx.recordSep or "\n"
-    local itemSep = ctx.itemSep or "="
+    local value = value or ctx.scope:Get(part)
+
+    local sep = ctx.scope:Get("pathSep") or "."
+    local recordSep = ctx.scope:Get("recordSep") or "\n"
+    local itemSep = ctx.scope:Get("itemSep") or "="
 
     local out = {}
 
