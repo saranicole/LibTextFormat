@@ -86,7 +86,7 @@ function LTF:eval(block, scope)
 
         local stage = self:GetStage(part)
         if stage then
-            value = stage(ctx, value)
+            value = stage(ctx, value, part)
 
             if returnsObject(part) then
                 lastRenderer = stage
@@ -100,6 +100,10 @@ function LTF:eval(block, scope)
 end
 
 function LTF:format(template, scope)
+  d("template")
+  d(template)
+  d("IsPureExpression(template)")
+  d(IsPureExpression(template))
   if IsPureExpression(template) then
       local block = template:match("{(.-)}")
       return self:eval(block, scope)

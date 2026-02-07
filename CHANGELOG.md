@@ -3,6 +3,7 @@
 - Added versioning
 - Removed encode and decode approach from protocols
 - Removed Math and String functions - this should probably be processed on the backend
+- Fixed variable retrieval
 
 ## 2025.02.05
 - Fixes, added documentation

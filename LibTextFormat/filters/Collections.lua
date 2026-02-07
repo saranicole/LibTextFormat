@@ -10,7 +10,9 @@ local function NormalizeAccountName(name)
 end
 
 LTF.Core["v1"]["house"] = function(ctx, text)
-    if not ctx.houseId then return "" end
-    local username = NormalizeAccountName(ctx.userId)
-    return text..zo_strformat("|H1:housing:<<1>>:<<2>>|h|h", ctx.houseId, ctx.username)
+    text = text or ""
+    local houseId = ctx.scope:Get("houseId")
+    if not houseId then return "" end
+    local username = NormalizeAccountName(ctx.scope:Get("userId"))
+    return text..zo_strformat("|H1:housing:<<1>>:<<2>>|h|h", houseId, username)
 end

@@ -208,24 +208,22 @@ local object = MyAddon.LTF:format("{fromdotpath}", ))
 Custom protocol
 [code]
 
-MyAddon.LTF:RegisterProtocol("toformat", function(ctx, value)
+MyAddon.LTF:RegisterProtocol("toformat", function(ctx, value, part)
 
   -- custom encoding happens here
 
   -- ctx holds all variables passed in from scope
-
-  -- value holds the object to serialize into your format
+  local object = ctx.scope:Get(part)
 
 end)
 
 
-MyAddon.LTF:RegisterProtocol("fromformat", function(ctx, value)
+MyAddon.LTF:RegisterProtocol("fromformat", function(ctx, value, part)
 
   -- custom decoding happens here
 
   -- ctx holds all variables passed in from scope
-
-  -- value holds the text to decode into your format
+  local text = ctx.scope:Get(part)
 
 end)
 
@@ -238,6 +236,9 @@ In the case of a protocol, you still use the regular MyAddon.LTF:format function
 [color=orange]All parameters must be passed through the scope by using field names that match the filter's parameters.[/color]
 
 [code]
+
+-- Access parameters in custom filter using
+local myparam = ctx.scope:Get("myparam")
 
 house:
 
