@@ -7,8 +7,8 @@ LTF.ProtocolMeta = LTF.ProtocolMeta or {
     fromcsv = { consumes = "string", produces = "table" },
 }
 
-LTF.CoreProtocols["v1"]["tocsv"] = function(ctx, value)
-  value = value or {}
+LTF.CoreProtocols["v1"]["tocsv"] = function(ctx, value, part)
+  value = value or ctx.scope:Get(part)
   local sep = ctx.scope:Get("pathSep") or ","
   local recordSep = ctx.scope:Get("recordSep") or "\n"
 
@@ -20,8 +20,8 @@ LTF.CoreProtocols["v1"]["tocsv"] = function(ctx, value)
   return out
 end
 
-LTF.CoreProtocols["v1"]["fromcsv"] = function(ctx, text)
-    local text = text or ""
+LTF.CoreProtocols["v1"]["fromcsv"] = function(ctx, text, part)
+    local text = text or ctx.scope:Get(part)
     local sep = ctx.scope:Get("pathSep") or ","
     local recordSep = ctx.scope:Get("recordSep") or "\n"
 
