@@ -1,5 +1,6 @@
 ## 2025.02.07
 - Fix dotpath
+- Add asserts for easier debugging
 
 ## 2025.02.06
 - Protocol refactor

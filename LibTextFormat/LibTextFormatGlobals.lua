@@ -49,6 +49,31 @@ function LTF:GetVarByValue(key, value)
   return nil
 end
 
+function LTF.IsEmpty(value)
+  local t = type(value)
+
+  if t == "nil" then
+    return true
+  end
+
+  if t == "string" then
+    return value == ""
+  end
+
+  if t == "table" then
+    return next(value) == nil
+  end
+
+  return false
+end
+
+function LTF.error(error)
+  if not error then
+    return "|cFF0000[LTF]|r LibTextFormat: Unhandled error."
+  end
+  return "|cFF0000[LTF]|r LibTextFormat: "..error
+end
+
 function LTF:Initialize(vars)
   self.savedVars = vars
 end
