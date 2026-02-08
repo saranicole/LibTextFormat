@@ -126,7 +126,16 @@ local function Flatten(obj, prefix, out, ctx)
 end
 
 LTF.CoreProtocols["v1"]["todotpath"] = function(ctx, value, part)
-    local value = value or ctx.scope:Get(part)
+    value = value or ctx.scope:Get(part)
+
+    assert(value, LTF.error(" Value passed with the todotpath key is either empty or there is no todotpath key."))
+    assert(type(value) == "table", LTF.error(" Value passed to the todotpath key is not a table."))
+
+    -- Empty values are permitted
+    if LTF.IsEmpty(value) then
+      return ""
+    end
+
     local sep = ctx.scope:Get("pathSep") or "."
     local recordSep = ctx.scope:Get("recordSep") or "\n"
     local itemSep = ctx.scope:Get("itemSep") or "="
@@ -148,7 +157,15 @@ end
 
 LTF.CoreProtocols["v1"]["fromdotpath"] = function(ctx, value, part)
 
-    local value = value or ctx.scope:Get(part)
+    value = value or ctx.scope:Get(part)
+
+    assert(value, LTF.error(" Value passed with the fromdotpath key is either empty or there is no fromdotpath key."))
+    assert(type(value) == "string", LTF.error(" Value passed to the fromdotpath key is not a string."))
+
+    -- Empty values are permitted
+    if LTF.IsEmpty(value) then
+      return ""
+    end
 
     local sep = ctx.scope:Get("pathSep") or "."
     local recordSep = ctx.scope:Get("recordSep") or "\n"

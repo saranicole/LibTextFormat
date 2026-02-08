@@ -88,12 +88,16 @@ function LTF:eval(block, scope)
         if stage then
             value = stage(ctx, value, part)
 
-            if returnsObject(part) then
+            if value ~= nil and returnsObject(part) then
                 lastRenderer = stage
             end
         else
             value = scope:Get(part)
         end
+    end
+
+    if self.IsEmpty(value) then
+      return value
     end
 
     return value, lastRenderer
